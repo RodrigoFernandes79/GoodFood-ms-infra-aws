@@ -8,6 +8,8 @@ import software.constructs.Construct;
 
 
 public class ClusterGoodFoodStack extends Stack {
+    private Cluster cluster;
+
     public ClusterGoodFoodStack(final Construct scope, final String id, final Vpc vpc) {
         this(scope, id, null, vpc);
     }
@@ -19,4 +21,7 @@ public class ClusterGoodFoodStack extends Stack {
                 .vpc(vpc).build();
     }
 
+    public Cluster getCluster() {
+        return cluster;
+    }
 }
