@@ -6,7 +6,9 @@ public class GoodFoodMsAwsInfraApp {
     public static void main(final String[] args) {
         App app = new App();
 
-        new VPCGoodFoodStack(app, "VPC");
+        VPCGoodFoodStack vpcStack = new VPCGoodFoodStack(app, "VPC");
+        ClusterGoodFoodStack clusterStack = new ClusterGoodFoodStack(app, "CLUSTER", vpcStack.getVpc());
+        clusterStack.addDependency(vpcStack);
         app.synth();
     }
 }
