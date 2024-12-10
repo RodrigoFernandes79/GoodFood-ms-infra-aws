@@ -9,10 +9,11 @@ public class GoodFoodMsAwsInfraApp {
         VPCGoodFoodStack vpcStack = new VPCGoodFoodStack(app, "VPC");
         ClusterGoodFoodStack clusterStack = new ClusterGoodFoodStack(app, "CLUSTER", vpcStack.getVpc());
         clusterStack.addDependency(vpcStack);
-        DatabaseRdsStack rdsStack = new DatabaseRdsStack(app,"DBRDS",vpcStack.getVpc());
+        DatabaseRdsStack rdsStack = new DatabaseRdsStack(app, "DBRDS", vpcStack.getVpc());
         rdsStack.addDependency(vpcStack);
         ServiceGoodFoodStack serviceStack = new ServiceGoodFoodStack(app, "SERVICE", clusterStack.getCluster());
         serviceStack.addDependency(clusterStack);
+        serviceStack.addDependency(rdsStack);
         app.synth();
     }
 }
