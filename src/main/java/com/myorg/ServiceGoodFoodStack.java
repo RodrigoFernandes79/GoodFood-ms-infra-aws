@@ -3,6 +3,8 @@ package com.myorg;
 import software.amazon.awscdk.Fn;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
+import software.amazon.awscdk.services.ecr.IRepository;
+import software.amazon.awscdk.services.ecr.Repository;
 import software.amazon.awscdk.services.ecs.Cluster;
 import software.amazon.awscdk.services.ecs.ContainerImage;
 import software.amazon.awscdk.services.ecs.patterns.ApplicationLoadBalancedFargateService;
@@ -27,6 +29,8 @@ public class ServiceGoodFoodStack extends Stack {
         dbAuthentication.put("SPRING_DATASOURCE_USERNAME", "admin");
         dbAuthentication.put("SPRING_DATASOURCE_PASSWORD", Fn.importValue("orders-db-senha"));
 
+        IRepository repository = Repository.fromRepositoryName(this, "repository", "img-orders-ms");
+
         // Create a load-balanced Fargate service and make it public
         ApplicationLoadBalancedFargateService app = ApplicationLoadBalancedFargateService.Builder.create(this, "GoodFoodService")
                 .serviceName("GoodFood-service-ola")
@@ -37,7 +41,7 @@ public class ServiceGoodFoodStack extends Stack {
                 .assignPublicIp(true)
                 .taskImageOptions(
                         ApplicationLoadBalancedTaskImageOptions.builder()
-                                .image(ContainerImage.fromRegistry("fernandesrh/orders-microsservice-api-goodfood:latest"))
+                                .image(ContainerImage.fromEcrRepository(repository))
                                 .containerPort(8080)
                                 .containerName("orders-ms")
                                 .environment(dbAuthentication)
